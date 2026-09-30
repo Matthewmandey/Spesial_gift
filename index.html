@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>spesial for you</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #fff7f2;
+        --paper: #fffdfb;
+        --brown: #6b4b3e;
+        --dark: #4b352d;
+        --pink: #f4b6b8;
+        --pink2: #ffd9d8;
+        --cream: #fff0df;
+        --green: #a9c8a0;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: var(--dark);
+      }
+      body {
+        background: linear-gradient(180deg, #fff8f4, #fff0e8);
+        overflow-x: hidden;
+      }
+      button {
+        font: inherit;
+      }
+      .scene {
+        min-height: 100svh;
+        display: none;
+        position: relative;
+        overflow: hidden;
+        padding: 28px 20px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .scene.active {
+        display: flex;
+      }
+      .bg-deco {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .cloud {
+        position: absolute;
+        width: 110px;
+        height: 35px;
+        background: #fff8;
+        border-radius: 50px;
+        filter: blur(0.2px);
+      }
+      .cloud:before,
+      .cloud:after {
+        content: "";
+        position: absolute;
+        background: inherit;
+        border-radius: 50%;
+      }
+      .cloud:before {
+        width: 45px;
+        height: 45px;
+        left: 18px;
+        top: -20px;
+      }
+      .cloud:after {
+        width: 60px;
+        height: 60px;
+        right: 15px;
+        top: -27px;
+      }
+      .c1 {
+        top: 12%;
+        left: -25px;
+      }
+      .c2 {
+        top: 25%;
+        right: -35px;
+        transform: scale(0.7);
+      }
+      .c3 {
+        top: 70%;
+        left: -45px;
+        transform: scale(0.55);
+      }
+      .content {
+        position: relative;
+        z-index: 2;
+        width: min(100%, 430px);
+      }
+      h1 {
+        font-size: clamp(27px, 8vw, 38px);
+        margin: 0 0 10px;
+        letter-spacing: -0.7px;
+      }
+      p {
+        line-height: 1.65;
+        margin: 8px 0;
+      }
+      .sub {
+        opacity: 0.7;
+        font-size: 14px;
+      }
+      .btn {
+        border: 0;
+        background: var(--brown);
+        color: #fff;
+        padding: 13px 22px;
+        border-radius: 999px;
+        cursor: pointer;
+        box-shadow: 0 7px 18px #6b4b3e22;
+        transition:
+          0.2s transform,
+          0.2s box-shadow;
+        margin-top: 18px;
+      }
+      .btn:active {
+        transform: scale(0.96);
+        box-shadow: 0 3px 8px #6b4b3e22;
+      }
+      .btn.secondary {
+        background: #fff;
+        color: var(--brown);
+        border: 1px solid #ead7cd;
+      }
+      .bear-wrap {
+        height: 210px;
+        display: flex;
+        align-items: end;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      .bear {
+        position: relative;
+        width: 145px;
+        height: 155px;
+        animation: float 2.8s ease-in-out infinite;
+      }
+      .ear {
+        position: absolute;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: #9b705c;
+        top: 4px;
+      }
+      .ear:after {
+        content: "";
+        position: absolute;
+        inset: 9px;
+        border-radius: 50%;
+        background: #d8a895;
+      }
+      .ear.left {
+        left: 10px;
+      }
+      .ear.right {
+        right: 10px;
+      }
+      .head {
+        position: absolute;
+        width: 112px;
+        height: 95px;
+        border-radius: 48% 48% 45% 45%;
+        background: #b9846c;
+        left: 16px;
+        top: 20px;
+        z-index: 2;
+      }
+      .face {
+        position: absolute;
+        inset: 0;
+      }
+      .eye {
+        position: absolute;
+        width: 7px;
+        height: 10px;
+        background: #4b352d;
+        border-radius: 50%;
+        top: 39px;
+      }
+      .eye.left {
+        left: 32px;
+      }
+      .eye.right {
+        right: 32px;
+      }
+      .muzzle {
+        position: absolute;
+        width: 48px;
+        height: 34px;
+        border-radius: 50%;
+        background: #dba992;
+        left: 32px;
+        top: 49px;
+      }
+      .nose {
+        position: absolute;
+        width: 12px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4b352d;
+        left: 50%;
+        top: 55px;
+        transform: translateX(-50%);
+      }
+      .mouth {
+        position: absolute;
+        width: 16px;
+        height: 8px;
+        border-bottom: 2px solid #4b352d;
+        border-radius: 50%;
+        left: 50%;
+        top: 63px;
+        transform: translateX(-50%);
+      }
+      .body {
+        position: absolute;
+        width: 92px;
+        height: 78px;
+        border-radius: 48% 48% 35% 35%;
+        background: #a97660;
+        left: 26px;
+        top: 90px;
+        z-index: 1;
+      }
+      .belly {
+        position: absolute;
+        width: 62px;
+        height: 48px;
+        border-radius: 50%;
+        background: #d7a18b;
+        left: 15px;
+        top: 14px;
+      }
+      .arm {
+        position: absolute;
+        width: 25px;
+        height: 58px;
+        border-radius: 18px;
+        background: #a97660;
+        top: 101px;
+        z-index: 3;
+      }
+      .arm.left {
+        left: 13px;
+        transform: rotate(25deg);
+      }
+      .arm.right {
+        right: 13px;
+        transform: rotate(-25deg);
+      }
+      .foot {
+        position: absolute;
+        width: 38px;
+        height: 25px;
+        border-radius: 50%;
+        background: #956852;
+        bottom: 0;
+        z-index: 0;
+      }
+      .foot.left {
+        left: 22px;
+      }
+      .foot.right {
+        right: 22px;
+      }
+      .package {
+        position: absolute;
+        width: 55px;
+        height: 43px;
+        background: #e6b878;
+        left: 45px;
+        top: 105px;
+        z-index: 4;
+        border-radius: 5px;
+        box-shadow: inset 0 0 0 2px #c99556;
+      }
+      .package:before {
+        content: "";
+        position: absolute;
+        left: 24px;
+        top: 0;
+        width: 7px;
+        height: 43px;
+        background: #d58e68;
+      }
+      .package:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 18px;
+        width: 55px;
+        height: 6px;
+        background: #d58e68;
+      }
+      @keyframes float {
+        50% {
+          transform: translateY(-7px);
+        }
+      }
+      .mailbox {
+        width: 210px;
+        height: 130px;
+        margin: 15px auto 0;
+        position: relative;
+      }
+      .box {
+        position: absolute;
+        bottom: 0;
+        left: 10px;
+        width: 190px;
+        height: 90px;
+        background: #c96f6d;
+        border-radius: 10px;
+        box-shadow: 0 12px 25px #8e4f4d22;
+      }
+      .box:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -28px;
+        height: 50px;
+        background: #d98580;
+        border-radius: 95px 95px 0 0/55px 55px 0 0;
+      }
+      .flag {
+        position: absolute;
+        right: -8px;
+        top: 12px;
+        width: 8px;
+        height: 65px;
+        background: #7b5147;
+        transform-origin: bottom;
+      }
+      .flag:after {
+        content: "";
+        position: absolute;
+        right: -20px;
+        top: 0;
+        border: 10px solid transparent;
+        border-left-color: #7b5147;
+        border-top: 0;
+      }
+      .slot {
+        position: absolute;
+        left: 58px;
+        top: 29px;
+        width: 75px;
+        height: 9px;
+        border-radius: 10px;
+        background: #754f4a;
+        z-index: 2;
+      }
+      .letter {
+        width: min(92%, 370px);
+        background: var(--paper);
+        padding: 28px 24px 30px;
+        border-radius: 8px;
+        box-shadow: 0 18px 45px #7b514722;
+        position: relative;
+        transform: rotate(-1deg);
+        animation: paperIn 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .letter:before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border: 1px dashed #e8cfc4;
+        border-radius: 5px;
+        pointer-events: none;
+      }
+      .letter h2 {
+        font-family: Georgia, serif;
+        font-weight: 500;
+        margin: 0 0 18px;
+        font-size: 27px;
+      }
+      .letter p {
+        text-align: left;
+        font-family: Georgia, serif;
+        font-size: 15.5px;
+        color: #60483f;
+      }
+      .letter .sign {
+        text-align: right;
+        margin-top: 22px;
+      }
+      @keyframes paperIn {
+        from {
+          opacity: 0;
+          transform: translateY(35px) rotate(2deg);
+        }
+        to {
+          opacity: 1;
+          transform: rotate(-1deg);
+        }
+      }
+      .flower {
+        font-size: 38px;
+        display: inline-block;
+        animation: sway 2s ease-in-out infinite;
+      }
+      @keyframes sway {
+        50% {
+          transform: rotate(8deg);
+        }
+      }
+      .hearts {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .heart {
+        position: absolute;
+        opacity: 0;
+        animation: rise 4s linear forwards;
+      }
+      @keyframes rise {
+        0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.7);
+        }
+        15% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-130px) scale(1.2);
+        }
+      }
+      .small-note {
+        font-size: 12px;
+        opacity: 0.5;
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="scene active" id="scene1">
+      <div class="bg-deco">
+        <i class="cloud c1"></i><i class="cloud c2"></i>
+      </div>
+      <div class="content">
+        <div class="bear-wrap">
+          <div class="bear" aria-label="cute bear">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+            <div class="head">
+              <div class="face">
+                <span class="eye left"></span><span class="eye right"></span
+                ><span class="muzzle"></span><span class="nose"></span
+                ><span class="mouth"></span>
+              </div>
+            </div>
+            <div class="body"><div class="belly"></div></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+            <div class="package"></div>
+          </div>
+        </div>
+        <h1>hi...</h1>
+        <p>nice to meet you, i'm a grizzly bear</p>
+        <p class="sub">and I have a gift spesial for you</p>
+        <button class="btn" onclick="nextScene()">what is it? ♡</button>
+      </div>
+    </section>
+
+    <section class="scene" id="scene2">
+      <div class="bg-deco">
+        <i class="cloud c1"></i><i class="cloud c3"></i>
+      </div>
+      <div class="content">
+        <div class="bear-wrap">
+          <div class="bear">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+            <div class="head">
+              <div class="face">
+                <span class="eye left"></span><span class="eye right"></span
+                ><span class="muzzle"></span><span class="nose"></span
+                ><span class="mouth"></span>
+              </div>
+            </div>
+            <div class="body"><div class="belly"></div></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+            <div class="package"></div>
+          </div>
+        </div>
+        <p class="sub">wait a sec....</p>
+        <div
+          style="
+            margin: 18px auto;
+            width: 230px;
+            height: 8px;
+            background: #eadbd3;
+            border-radius: 10px;
+            overflow: hidden;
+          "
+        >
+          <div
+            id="progress"
+            style="
+              width: 0;
+              height: 100%;
+              background: #c9847f;
+              border-radius: 10px;
+              transition: width 1.7s;
+            "
+          ></div>
+        </div>
+        <p id="loadingText">prepare a spesial gift</p>
+      </div>
+    </section>
+
+    <section class="scene" id="scene3">
+      <div class="content">
+        <div class="bear-wrap">
+          <div class="bear">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+            <div class="head">
+              <div class="face">
+                <span class="eye left"></span><span class="eye right"></span
+                ><span class="muzzle"></span><span class="nose"></span
+                ><span class="mouth"></span>
+              </div>
+            </div>
+            <div class="body"><div class="belly"></div></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+          </div>
+        </div>
+        <h1>oke this is for you ♡</h1>
+        <p class="sub">now open your mailbox.</p>
+        <div class="mailbox">
+          <div class="box"></div>
+          <div class="slot"></div>
+          <div class="flag"></div>
+        </div>
+        <button class="btn" onclick="nextScene()">open mailbox </button>
+      </div>
+    </section>
+
+    <section class="scene" id="scene4">
+      <div class="content">
+        <div class="bear-wrap">
+          <div class="bear">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+            <div class="head">
+              <div class="face">
+                <span class="eye left"></span><span class="eye right"></span
+                ><span class="muzzle"></span><span class="nose"></span
+                ><span class="mouth"></span>
+              </div>
+            </div>
+            <div class="body"><div class="belly"></div></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+          </div>
+        </div>
+        <p>Wait... </p>
+        <p class="sub">I almost forgot something.</p>
+        <div class="flower"></div>
+        <p class="sub">Okay. <b>now</b> it's ready.</p>
+        <button class="btn" onclick="nextScene()">take the letter </button>
+      </div>
+    </section>
+
+    <section class="scene" id="scene5">
+      <div class="content">
+        <div class="letter">
+          <h2>Hi, Elsya, this is the spesial letter for you ♡</h2>
+          <p>
+            Dear Elsya....
+          </p>
+          <p>
+            hi princess, well ini girl day right?, so i made this pages spesial buat kamu
+          </p>
+          <p>hope you like :</p>
+          <p style="text-align: center; font-size: 21px">
+            <b>Happy Girls Day! ♡</b>
+          </p>
+          <p>
+            I hope today gives you plenty of reasons to smile, laugh, and have a
+            really good day, and sorry if i make a mistakes so far, but i wish you hace a joyfull and happiness in every your day.
+          </p>
+          <p class="sign">— from grizzly bear ♡</p>
+        </div>
+        <button class="btn secondary" onclick="finish()">
+          next
+        </button>
+      </div>
+    </section>
+
+    <section class="scene" id="scene6">
+      <div class="hearts" id="hearts"></div>
+      <div class="content">
+        <div class="bear-wrap">
+          <div class="bear" id="finalBear">
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+            <div class="head">
+              <div class="face">
+                <span class="eye left"></span><span class="eye right"></span
+                ><span class="muzzle"></span><span class="nose"></span
+                ><span class="mouth"></span>
+              </div>
+            </div>
+            <div class="body"><div class="belly"></div></div>
+            <div class="arm left"></div>
+            <div class="arm right"></div>
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+          </div>
+        </div>
+        <h1>Yeyyyyy ! ♡</h1>
+        <p>I hope this little gift makes you smile.</p>
+        <p class="sub">:)</p>
+      </div>
+    </section>
+
+    <script>
+      let current = 1;
+      const scenes = [...document.querySelectorAll(".scene")];
+
+      function show(n) {
+        scenes.forEach((s) => s.classList.remove("active"));
+        document.getElementById("scene" + n).classList.add("active");
+        current = n;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function nextScene() {
+        if (current === 1) {
+          show(2);
+          startLoading();
+        } else if (current === 2) {
+          show(3);
+        } else if (current === 3) {
+          show(4);
+        } else if (current === 4) {
+          show(5);
+        }
+      }
+
+      function startLoading() {
+        const bar = document.getElementById("progress");
+        const text = document.getElementById("loadingText");
+        setTimeout(() => (bar.style.width = "35%"), 300);
+        setTimeout(() => {
+          bar.style.width = "68%";
+          text.textContent = "almost done";
+        }, 800);
+        setTimeout(() => {
+          bar.style.width = "100%";
+          text.textContent = "the gift is ready ♡";
+        }, 1500);
+        setTimeout(() => show(3), 2300);
+      }
+
+      function finish() {
+        show(6);
+        const box = document.getElementById("hearts");
+        for (let i = 0; i < 14; i++) {
+          const h = document.createElement("span");
+          h.className = "heart";
+          h.textContent = ["♡", "♥", "✦", "🌷"][Math.floor(Math.random() * 4)];
+          h.style.left = 10 + Math.random() * 80 + "%";
+          h.style.top = 65 + Math.random() * 20 + "%";
+          h.style.animationDelay = Math.random() * 1.5 + "s";
+          h.style.fontSize = 12 + Math.random() * 15 + "px";
+          box.appendChild(h);
+        }
+      }
+    </script>
+  </body>
+</html>

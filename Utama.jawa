@@ -1,0 +1,5 @@
+ono ayang = "Elsya";
+ono ewu = 1000;
+ono total = ewu * 3;
+
+tampilno(`I love you ${total} ${ayang} ❤️`);
